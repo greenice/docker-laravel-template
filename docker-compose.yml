@@ -1,0 +1,81 @@
+version: '3'
+
+networks:
+  laravel:
+
+services:
+  app:
+    build:
+      context: ./docker
+      dockerfile: nginx.dockerfile
+    container_name: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./:/var/www/html:delegated
+    environment:
+      NGINX_SERVER_NAME: ${NGINX_SERVER_NAME-_}
+    depends_on:
+      - php
+      - redis
+#      - mysql
+      - mailhog
+    networks:
+      - laravel
+
+#  mysql:
+#    image: mysql:5.7.29
+#    container_name: mysql
+#    restart: unless-stopped
+#    tty: true
+#    ports:
+#      - 3306:3306
+#    volumes:
+#      - ./docker/mysql:/var/lib/mysql
+#    environment:
+#      MYSQL_DATABASE: homestead
+#      MYSQL_USER: homestead
+#      MYSQL_PASSWORD: secret
+#      MYSQL_ROOT_PASSWORD: secret
+#      SERVICE_TAGS: dev
+#      SERVICE_NAME: mysql
+#    networks:
+#      - laravel
+
+  php:
+    build:
+      context: ./docker/php/${PHP_VERSION-74}
+    container_name: 'php-${PHP_VERSION-74}'
+    volumes:
+      - ./:/var/www/html:delegated
+    networks:
+      - laravel
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    networks:
+      - laravel
+
+  npm:
+    image: node:13.7
+    container_name: npm
+    volumes:
+      - ./:/var/www/html
+    working_dir: /var/www/html
+    entrypoint: ['npm']
+#    entrypoint: ['yarn']
+    networks:
+      - laravel
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - laravel
