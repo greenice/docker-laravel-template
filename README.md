@@ -37,7 +37,8 @@ For running common commands use:
 
 ### MYSQL
 
-- `DB_HOST=host.docker.internal` - If you use local MYSQL
+- `DB_HOST=host.docker.internal` - If you use local MYSQL (MacOs)
+- `DB_HOST=172.17.0.1` - If you use local MYSQL (Linux)
 - `DB_HOST=mysql` - If you use docker mysql image
 
 ### CACHE
