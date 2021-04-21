@@ -41,6 +41,14 @@ For running common commands use:
 - `DB_HOST=172.17.0.1` - If you use local MYSQL (Linux)
 - `DB_HOST=mysql` - If you use docker mysql image
 
+If you use the local DB, please add to my.cnf:
+
+```
+[mysqld]
+bind-address=0.0.0.0
+```
+
+
 ### CACHE
 
 - `CACHE_DRIVER=redis`
